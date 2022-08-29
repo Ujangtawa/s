@@ -1,1 +1,69 @@
-Fffggg
+chance       = 60.5
+bethigh      = !bethigh
+basebet      = 0.001
+nextbet      = basebet
+minbetofsite = 0.00001
+maxbalance   = balance
+loseAmount   = 0
+sbalance     = balance
+won          = 0
+loss         = 0
+resetstats()
+
+
+function dobet() 
+
+    swapseed = 250
+         if balance>=(maxbalance+(maxbalance*5/100)) then 
+             maxbalance = balance * 1
+         loseAmount = 0
+        
+       else
+         if winstreak == 1 then
+        won     = 1-loss
+        
+        end 
+    loseAmount = maxbalance - (balance * 1)
+    bethigh    = !bethigh
+
+       end
+        
+
+           if win then        
+               won     = won+1
+               bethigh = !bethigh
+               if won<=loss then 
+                    
+                    nextbet = nextbet*1.5
+                    bethigh = !bethigh
+      else
+                   
+                    nextbet = nextbet*1.5
+      end
+else
+                chance  = 60.5
+                
+               nextbet = nextbet*1.5
+won=0
+loss=loss+1
+end
+
+
+
+if nextbet>(loseAmount/(99/chance-1)) then
+nextbet = loseAmount/(99/chance-1)
+chance  = 60.5
+bethigh = !bethigh
+end
+if nextbet<basebet then
+nextbet = basebet
+bethigh = !bethigh
+chance  = math.random (1,98)
+end
+if profit > 500 then
+    stop()
+    end
+if bets % swapseed == 0 then 
+   resetseed()
+end
+end
