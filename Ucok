@@ -1,69 +1,64 @@
-chance       = 60.5
-bethigh      = !bethigh
-basebet      = 0.001
-nextbet      = basebet
-minbetofsite = 0.00001
-maxbalance   = balance
-loseAmount   = 0
-sbalance     = balance
-won          = 0
-loss         = 0
+ttarget = 55
+
+basebet = 0.00004 
+ct_bet  = 10000
+mt_bet  = 1.012
+ 
+preroll = 0.000000
+ct_roll = 230
+mt_roll = 1.02 
+ 
+profitct    = 0 
+count_roll  = 1 
+count_bet   = 1 
+lastbasebet = basebet  
+lastpreroll = preroll 
+on_preroll  = true 
+ 
+chance  = 2 
+bethigh = true 
+nextbet = preroll
 resetstats()
 
 
-function dobet() 
 
-    swapseed = 250
-         if balance>=(maxbalance+(maxbalance*5/100)) then 
-             maxbalance = balance * 1
-         loseAmount = 0
-        
-       else
-         if winstreak == 1 then
-        won     = 1-loss
-        
-        end 
-    loseAmount = maxbalance - (balance * 1)
-    bethigh    = !bethigh
-
-       end
-        
-
-           if win then        
-               won     = won+1
-               bethigh = !bethigh
-               if won<=loss then 
-                    
-                    nextbet = nextbet*1.5
-                    bethigh = !bethigh
-      else
-                   
-                    nextbet = nextbet*1.5
-      end
-else
-                chance  = 60.5
-                
-               nextbet = nextbet*1.5
-won=0
-loss=loss+1
-end
-
-
-
-if nextbet>(loseAmount/(99/chance-1)) then
-nextbet = loseAmount/(99/chance-1)
-chance  = 60.5
-bethigh = !bethigh
-end
-if nextbet<basebet then
-nextbet = basebet
-bethigh = !bethigh
-chance  = math.random (1,98)
-end
-if profit > 500 then
-    stop()
-    end
-if bets % swapseed == 0 then 
-   resetseed()
-end
-end
+function dobet()
+     if (balance > ttarget) then 
+        stop() 
+     end  
+     if win then
+         nextbet     = base
+         count_bet   = 1
+         count_roll  = 1
+         lastbasebet = basebet
+         lastpreroll = preroll
+         on_preroll  = true
+     else
+         chance = 1.7
+         profitct += currentprofit 
+         if profitct > 0 then 
+             profitct    = 0 
+             count_bet   = 1 
+             count_roll  = 1 
+             lastbasebet = basebet 
+             lastpreroll = preroll 
+             on_preroll  = true 
+         end 
+ 
+         if on_preroll then 
+             nextbet     = lastpreroll * mt_roll 
+             lastpreroll = nextbet 
+             count_roll += 1 
+             if count_roll%ct_roll==0 then  
+                 on_preroll = false  
+             end 
+         else 
+             nextbet     = lastbasebet * mt_bet 
+             lastbasebet = nextbet 
+             count_bet += 1 
+             if count_bet%ct_bet==0 then  
+                 on_preroll = true  
+             end 
+         end
+     end
+ end
