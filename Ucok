@@ -1,1 +1,69 @@
-eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiMGFmMzk4NjIzNDdhYTI1YWFlMGZiZmVjY2Y5MTYyZTlkZmYxZjMxNDllYTE1Y2JkNGZlMTc2NDBhZTAzOWE3NzI1M2UwOTcxZTA2YjRlZGEiLCJpYXQiOjE2NjE4NjIyNzksIm5iZiI6MTY2MTg2MjI3OSwiZXhwIjoxNjkzMzk4Mjc5LCJzdWIiOiI0MjI1NjQiLCJzY29wZXMiOltdfQ.j_dO4VdruMvxgKNZ35EHpz4qKv_fu3HAzWdQ6Yc-dTTCZYg5-_SfyQX_xkYr9ng9qL9-L5N2pxpuZMC74wJaghXy6g03J7OwHerwGbdBoEdm1sdEw7SXNNylCatcPqPVcJhob6zdf1mZ9OnAHvOYGq0Cm1dln2Z47ODxIdBXMXAEq1QY2Z-xXbeeMjFlN2MHHynSKN-H79X99zVwXZtYIk8RfM1M0Vx0njo0LxiFtRPwXcu9icASSn6iFK2YlBLnj5-9zA9h8oNaVg8kjncgeT_7zacze2e9pbjfCC_l3cny_RjsRiBkncBaDxwCbFwBUtdrxSSuhPyTiqbyNjZ-W1VcoYslHSIq4_7us79VRZfwsribid_sWQbcQTnPO4LKs7O6THRbIkYH1iZlmF_djHs0-qQGgbLidM3XAXj3PSojs_gfPNwg0OyiJC3rTs13YtqCqqjOT39RlZstzFJGSZvdkRXbAVZ4hYLy_lYhtxQW0EKsiTxIjIDce9gcxFDyCvKH7PdJ5t3VM6IyBfk8ttlEYJPsn-VlNTLRB9ll_Ev5lcFNezyV8O6RVrJfdpXcTf848hhqQPqtyacuSiWP44GJvjTdSZUNtSDmud172xe6TBNSXvErnu_Fk9BQYidZbjtGRYA2hcPmxWEpqqkl2tAH32iSquj2gPPV-X5MLTg
+chance       = 60.5
+bethigh      = !bethigh
+basebet      = 0.001
+nextbet      = basebet
+minbetofsite = 0.00001
+maxbalance   = balance
+loseAmount   = 0
+sbalance     = balance
+won          = 0
+loss         = 0
+resetstats()
+
+
+function dobet() 
+
+    swapseed = 250
+         if balance>=(maxbalance+(maxbalance*5/100)) then 
+             maxbalance = balance * 1
+         loseAmount = 0
+        
+       else
+         if winstreak == 1 then
+        won     = 1-loss
+        
+        end 
+    loseAmount = maxbalance - (balance * 1)
+    bethigh    = !bethigh
+
+       end
+        
+
+           if win then        
+               won     = won+1
+               bethigh = !bethigh
+               if won<=loss then 
+                    
+                    nextbet = nextbet*1.5
+                    bethigh = !bethigh
+      else
+                   
+                    nextbet = nextbet*1.5
+      end
+else
+                chance  = 60.5
+                
+               nextbet = nextbet*1.5
+won=0
+loss=loss+1
+end
+
+
+
+if nextbet>(loseAmount/(99/chance-1)) then
+nextbet = loseAmount/(99/chance-1)
+chance  = 60.5
+bethigh = !bethigh
+end
+if nextbet<basebet then
+nextbet = basebet
+bethigh = !bethigh
+chance  = math.random (1,98)
+end
+if profit > 500 then
+    stop()
+    end
+if bets % swapseed == 0 then 
+   resetseed()
+end
+end
