@@ -1,1 +1,64 @@
-Jsjsk
+ttarget = 55
+
+basebet = 0.0030 
+ct_bet  = 10000
+mt_bet  = 1.03
+ 
+preroll = 0.000001
+ct_roll = 783753
+mt_roll = 1.03 
+ 
+profitct    = 0 
+count_roll  = 1 
+count_bet   = 1 
+lastbasebet = basebet  
+lastpreroll = preroll 
+on_preroll  = true 
+ 
+chance  = 2 
+bethigh = true 
+nextbet = preroll
+resetstats()
+
+
+
+function dobet()
+     if (balance > ttarget) then 
+        stop() 
+     end  
+     if win then
+         nextbet     = base
+         count_bet   = 1
+         count_roll  = 1
+         lastbasebet = basebet
+         lastpreroll = preroll
+         on_preroll  = true
+     else
+         chance = 1.7
+         profitct += currentprofit 
+         if profitct > 0 then 
+             profitct    = 0 
+             count_bet   = 1 
+             count_roll  = 1 
+             lastbasebet = basebet 
+             lastpreroll = preroll 
+             on_preroll  = true 
+         end 
+ 
+         if on_preroll then 
+             nextbet     = lastpreroll * mt_roll 
+             lastpreroll = nextbet 
+             count_roll += 1 
+             if count_roll%ct_roll==0 then  
+                 on_preroll = false  
+             end 
+         else 
+             nextbet     = lastbasebet * mt_bet 
+             lastbasebet = nextbet 
+             count_bet += 1 
+             if count_bet%ct_bet==0 then  
+                 on_preroll = true  
+             end 
+         end
+     end
+ end
