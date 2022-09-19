@@ -1,0 +1,99 @@
+chance     = math.random(5,24)
+bethigh    = true
+divider    = 99000000000
+basebet    = balance/divider
+nextbet    = basebet
+minbet     = 0.00000001
+maxbalance = balance
+loseAmount = 0
+rnd        = 1
+rndd       = 1 
+strategy   = 0
+maxbet     = balance*0.15
+maxlos     = balance*0.2
+
+dicebot         = 1
+startbalance    = balance
+netprofit       = 0
+time            = os.date("*t")
+currenttime     = time
+local clock     = os.clock
+local t0        = clock()
+t1              = 0
+runtime         = time
+starttime       = clock()
+
+function dobet()
+
+rnd=math.random(1,2)
+if rnd==1 then
+bethigh=true
+else
+bethigh=false
+end
+
+chance = math.random(5,24)
+         if balance>=maxbalance then
+                     basebet=balance/divider
+                nextbet    = basebet
+                minbet     = 0.00000001
+                maxbalance = balance
+                loseAmount = 0
+                strategy   = 0
+        else
+                loseAmount=maxbalance-balance
+                if loseAmount>(balance/2500) then
+                        strategy = 1
+                end
+    
+                if strategy==1 then
+                    if chance<25 then
+                        nextbet = loseAmount/(99/chance-2)    
+                    else 
+                         rndd=math.random(1,3)
+                         if rndd==1 then
+                             nextbet = loseAmount/(99/chance-1)
+                        elseif rndd==2 then
+                            nextbet=(loseAmount/(99/chance-1))/2
+                        else
+                            nextbet=(loseAmount/(99/chance-1))/3
+                        end 
+
+                    end
+            else
+
+                    nextbet = loseAmount/(99/(math.random(30,60))-1)
+                end
+         end
+
+
+if nextbet<minbet then
+nextbet=minbet
+end
+if nextbet>maxbet and (!win)then
+    sleep(1000)
+    resetstats()
+end
+if loseAmount>maxlos and (!win) then
+    sleep(1000)
+    resetstats()
+end
+
+netprofit=balance-startbalance
+    curtime = clock()
+    times = math.floor(curtime - starttime)
+    hours = math.floor(times / 3600)
+    minutes = math.floor((times - (hours * 3600)) / 60)
+    seconds = math.floor((times - (hours * 3600) - (minutes * 60)))
+    print("-------------------------------")
+    if dicebot == 0 then
+        print(("Start Time:      %02d:%02d:%02d"):format(currenttime.hour, currenttime.min, currenttime.sec))
+    end
+    print("Running Time:    "..hours ..':'..minutes..':'..seconds)
+    print("Total Profit:    "..string.format("%.8f",balance-startbalance))
+    print("% Profit:        "..string.format("%.6f",netprofit*100/startbalance))
+
+    chance = math.floor((chance*100)+0.5)/100
+end
+
+end
