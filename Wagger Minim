@@ -21,7 +21,15 @@ function CheckToStop()
   if (balance<minbal) then stop(); end;
   if (balance>maxbal) then stop(); end;
 end;
-
+function PrintInfos()
+ Print("")
+ Print("-----------------------------------------------")
+ Print("░▒▓- Balance: "..string.format("%.8f", balance));
+ Print("░▒▓- Stop Profit: "..string.format("%.8f", maxbal));
+ Print("░▒▓- Stop Loss: "..string.format("%.8f", minbal));
+ Print("░▒▓- Profit: "..string.format("%.8f", profit));
+ Print("-----------------------------------------------")
+ Print("")
 end;
 function SafeStrat()
  PrintInfos();
