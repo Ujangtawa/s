@@ -1,0 +1,119 @@
+newbase=(2000/(2^23)) -- 2000 diganti dengan saldo
+betcount=0
+bethigh=true
+chance=47.5--49.5
+counter=0
+high=0
+loss=0
+losscount=0
+lostchance=0
+low=0
+multiplier=2
+prebet=0.00000001
+preroll=14
+resetseed()
+resetstats()
+session=0
+wincount=0
+wins = 0
+evencount = 0
+maxlosscount = 0
+maxwincount = 0
+
+function dobet()
+    if betcount < preroll then
+betcount = betcount+ 1
+        nextbet=prebet
+            if win then
+            wins = wins+1
+            else
+                    loss = loss+1   
+           end                                      
+    end    
+    
+    if betcount == preroll or betcount > preroll then
+           if betcount == preroll then
+            wins = preroll - loss
+            betcount = betcount+1
+            count=wins-loss
+               if ((count==0) or (count==-10) or (count==10))  then
+                        nextbet=prebet
+                evencount =1
+                        print("Resetting")
+               else
+
+if ((count == -12) or (count == -8) or (count == -6) or (count == -2)  or (count == 4 ) or (count == 8 ) or (count == 14 )) then
+                if losscount==0 then
+                newbase = (balance/(2^23))
+                            nextbet=newbase
+                           else
+                nextbet=newbase*(2^losscount)
+                bethigh=true
+                
+               end
+            else
+             if losscount==0 then
+                           nextbet=newbase
+             else
+                nextbet=newbase*(2^losscount)
+                bethigh=false
+                
+             end
+            end
+                 end
+        
+    else
+            if evencount ==1 then
+                print("maxwincount: ".. maxwincount)
+print("maxlosscount: ".. maxlosscount)
+print (string.format("New Base: %.8f", newbase))
+                bethigh=true
+                nextbet=prebet
+                betcount=0
+                wins=0
+                loss=0
+                
+                resetseed()
+                evencount=0
+            
+            else
+                if win then      
+                    wincount +=1
+                        if wincount > maxwincount then
+                        maxwincount = wincount
+                        end
+                    losscount=0
+    print("maxwincount: ".. maxwincount)
+    print("maxlosscount: ".. maxlosscount)
+            print (string.format("New Base: %.8f", newbase))
+                    bethigh=true
+                    nextbet=prebet
+                    betcount=0
+                    wins=0
+                    loss=0
+                    
+                    resetseed()
+                else
+                     losscount +=1
+                     if losscount > maxlosscount then
+                        maxlosscount = losscount
+                        end
+                    wincount=0
+                    print("maxwincount: ".. maxwincount)
+    print("maxlosscount: ".. maxlosscount)
+                    print (string.format("New Base: %.8f", newbase))
+                    bethigh=true
+                    nextbet=prebet
+                    betcount=0
+                    wins=0
+                    loss=0
+                   
+                    resetseed()
+                 end
+
+            end
+            
+        end
+            
+    end
+end
