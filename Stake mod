@@ -1,0 +1,42 @@
+--Pelkud[Mesin_Grabag] 
+--Versi 2
+chance    = 49.5 
+base      = 0.00002
+preset    = 0.00001 
+ifwin     = 1.01
+iflose    = 1.115 
+nextbet   = base
+bethigh   = false
+cprofit   = 0 
+belisawah = balance + 5
+resetstats() 
+resetseed() 
+ 
+function dobet() 
+    cprofit = cprofit + currentprofit 
+     
+    if win then 
+        nextbet = previousbet * ifwin 
+    else 
+        nextbet = previousbet * iflose 
+    end 
+     
+    if cprofit > preset then 
+        cprofit = 0 
+        nextbet = base 
+    end 
+     
+     if (win) then 
+         chance = 66
+       
+    else
+        if (losses > 1) then 
+            chance = math.random(5,10)           
+        end 
+        if balance > belisawah then
+            print("nyicil sawah gess")
+            resetseed()
+            stop()
+        end
+    end
+ end
