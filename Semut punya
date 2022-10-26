@@ -1,0 +1,35 @@
+chance  = 49.5 
+base    = 0.000001
+preset  = 0.00000001
+ifwin   = 1.01
+iflose  = 1.15
+nextbet = base 
+cprofit = 0 
+ 
+resetstats() 
+resetseed() 
+ 
+function dobet() 
+    cprofit = cprofit + currentprofit 
+     
+    if win then 
+        nextbet = previousbet * ifwin 
+    else 
+        nextbet = previousbet * iflose 
+    end 
+     
+    if cprofit > preset then 
+        cprofit = 0 
+        nextbet = base 
+    end 
+     
+     if (win) then 
+         chance = 11
+        bethigh = !bethigh 
+    else
+        if (losses > 1) then 
+            chance = 75
+             bethigh = !bethigh  
+        end   
+end
+ end
