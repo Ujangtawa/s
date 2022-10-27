@@ -1,0 +1,28 @@
+
+-------Script:------
+
+balance   = 1
+target    = 1.01 
+
+basebet = balance / 1000;
+nextbet = basebet;
+wager = 0
+tb = 0
+xp = 0
+ch = 0
+
+function getChance(x)
+    return 99 / x
+end
+
+function dobet()
+    tb+=1
+    wager += nextbet
+    
+    local x = lastBet.result
+    local c = getChance(x)
+    xp += x
+    ch += c
+    local avg = xp / tb
+    target    = getChance(avg)
+end
