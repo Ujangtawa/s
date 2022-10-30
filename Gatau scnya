@@ -1,0 +1,61 @@
+
+chance        = 50
+minchancewin  = 0.01 -- min chance on win
+maxchancewin  = 98 -- max chance on win
+minchancelose = 0.01 -- min chance on lose
+maxchancelose = 98 -- max chance on lose
+---------------------------------
+div	      = 10000
+minbasebet    = 0.000019
+maxbasebet    = balance/div
+testbet       = 0.000019 -- test bet
+testbets      = 10 -- test bets
+base          = math.random(minbasebet*100000000,maxbasebet*100000000)/100000000.0
+casino        = 1 -- % risk
+test          = false
+bethigh       = false
+nextbet       = testbet  
+payout        = 1
+testb         = 0
+wincount      = 0
+losecount     = 0
+lastbalance   = balance
+profittarget  = balance * 2 
+
+function dobet() ---------------------------------
+
+
+ 
+base = math.random(minbasebet*100000000,maxbasebet*100000000)/100000000.0
+
+if (balance) >= profittarget then
+stop();
+print(balance)
+print("TARGET ACHIEVED!!!")
+end
+
+
+if balance >= lastbalance then
+      lastbalance=balance
+      chance=(math.random(minchancewin*100.00,maxchancewin*100.00)/100.00)
+      nextbet = testbet
+      test = true
+      testb = 0
+else 
+      if test==true then
+         testb+=1
+         chance=(math.random(minchancewin*100.00,maxchancewin*100.00)/100.00)
+         nextbet = testbet
+         if testb >= testbets then
+            test = false
+         end
+      else
+         payout = ((100-casino)*math.log(maxchancelose)-(100-casino)*math.log(minchancelose))/(maxchancelose-minchancelose)*10
+         nextbet = (lastbalance-balance+base)/(payout-1)
+         if nextbet<base then
+            nextbet=base
+         end
+     end
+end 
+
+end
