@@ -1,0 +1,103 @@
+-- sc c80 + wager
+minbet      = 1e-8
+div         = 1111
+basebet     = balance / (balance * div) -- sesuaikan dgn balance 
+basech      = math.random(8000,8100)/100
+losepercent = 1.03
+winpercent  = 0.95
+iflose      = 1.35
+ifwin       = 1.55
+houseEdge   = 2
+maxch       = 100-houseEdge 
+bethigh     = false
+wagerbet    = basebet * 10
+nextbet     = wagerbet
+chance      = basech
+cprofit     = 0
+target      = balance + 1
+stoplose    = balance * 0
+balhi       = 0
+drop        = 0
+maxdrop     = 0
+dd          = 0
+wagers      = 1
+if nextbet < minbet then nextbet = minbet end 
+
+function dobet()
+    
+    init_drop()
+    cprofit = cprofit + currentprofit  
+    if balance < stoplose then stop() end
+    if balance > target then
+        bethigh = !bethigh
+        stop()
+        sleep(1)
+        start()
+    end
+    if cprofit > 0 then 
+       wagers  = 0 
+       chance  = maxch
+       nextbet = wagerbet
+    end
+        
+   if (wagers == 0) then
+        init_wager()
+    else
+        basebet = balance / (balance * div)
+        if win then
+            chance  = lastBet.chance * winpercent
+            if previousbet > (basebet * 50) then
+                nextbet = lastBet.amount * 0.1
+            else
+                nextbet = lastBet.amount * ifwin
+            end
+            
+        else
+            if lastBet.roll > 50 and lastBet.roll < 99 then bethigh = true else bethigh = false end
+            if ((currentstreak == -3 or currentstreak < -2) and lastBet.amount > 0.5 and lastBet.nonce > 500) then 
+                math.randomseed(os.clock())
+                resetseed()
+            end
+            chance  = lastBet.chance * losepercent
+            nextbet = lastBet.amount * iflose
+        end
+       
+        
+        if chance > 89 then
+            chance  = 33
+            nextbet = math.abs(cprofit) / 2
+            bethigh = true
+        end
+    end
+    if nextbet < minbet then nextbet = minbet end 
+    log("\n\n ***** sc c80 + wager ***** \n") 
+    log("-=■ Winrate \t[ "..string.format("%.2f",((wins/losses)*100)).."% ]")
+    log("-=■ cProfit \t[ "..string.format("%.8f", profit).."\t".. string.format("%.2f", (profit/(balance-profit))*100).."% ]")
+    log("-=■ Basebet \t[ "..string.format("%.8f", basebet).." ]")
+    log("-=■ NextBet \t[ "..string.format("%.8f", nextbet).." ]") 
+    log("-=■ DropDown \t[ "..string.format("%.8f",maxdrop).."\t"..string.format("%.2f",dd).."% ]")  
+end
+function init_wager()
+    -- recovery ON
+    if  cprofit < 0 then 
+        wagers  = 1
+        chance  = basech
+        nextbet = balance /(balance * 111)
+    end
+    
+    if cprofit > 0 then
+        chance  = (maxch-1)
+        nextbet = wagerbet
+    end
+    if chance < (maxch-1) then chance = maxch end
+end
+function init_drop()
+    if balance > balhi then
+         balhi = balance
+    else
+         balhi = balhi
+    end
+    drop = balhi - balance 
+    if drop > maxdrop then maxdrop = drop end
+    dd = (maxdrop/balance)*100
+end
