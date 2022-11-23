@@ -1,0 +1,88 @@
+--Kyo Watanabe 
+--05/11/2022 
+--Mode 4 Tyong 
+--request Jenderal Micin 
+ 
+--mode mining!! 
+--sesuaikan saja!! 
+ 
+target      = balance * (10/100) --10% target profit 
+stoplose    = balance * 0.0001 --stop if balance drop to 5% 
+ 
+basebet    = 0.11 --basebet sesuaikan dengan bal anda 
+preset     = 0.1 --profit reset 
+passroll   = 33 --preroll 
+gateway    = 30 --cat lose / potong multi 
+multipler  = 1.056 --mutipler 
+swChance   = false 
+chancewin  = {49,49} --chance win tidak usah di rubah 
+chancelose = {4.8,5} --chance lose min 4,8 max 5 ,sesuaikan saja 
+ 
+tmpprofit = 0 
+gocount   = 0 
+tmplose   = 0 
+ws        = 0 
+ls        = 0 
+fbcount   = 0 
+passcount = passroll 
+ 
+nextbet = preset 
+chance  = chancewin[1] 
+ 
+function dobet() 
+    if profit > target then stop() end 
+    if balance < stoplose then stop() end 
+ 
+    if win then 
+resetseed() 
+        ws += 1 
+        ls = 0 
+ 
+        swChance = false 
+        if partialprofit >= preset then 
+            gocount   = 0 
+            fbcount   = 0 
+            tmplose   = 0 
+            nextbet   = preset 
+            passcount = passroll 
+            resetpartialprofit() 
+        else 
+            passcount = passroll 
+            gocount   = 0 
+            nextbet   = preset 
+        end 
+    else 
+        ls += 1 
+        ws = 0 
+ 
+        swChance = true 
+ 
+        if passcount == 0 then 
+            if gocount == gateway then 
+                nextbet = basebet * multipler 
+                gocount = 0 
+                passcount = passroll 
+                fbcount += 1 
+            else 
+                if tmplose == 0 then 
+                    nextbet = basebet * multipler 
+                    tmplose = nextbet 
+                else 
+                    nextbet = tmplose * multipler 
+                    tmplose = nextbet 
+                end 
+            end 
+ 
+            gocount += 1 
+        else 
+            passcount -= 1 
+            nextbet = preset 
+        end 
+    end 
+ 
+    if (swChance) then 
+        chance = math.random(chancelose[1]*100,chancelose[2]*100)/100 
+    else 
+        chance = math.random(chancewin[1]*100,chancewin[2]*100)/100 
+    end 
+end
