@@ -1,0 +1,54 @@
+--made by Fahmi
+-- sc wager for small balance
+basebet = 0.1
+maxch   = 99
+chance  = maxch 
+nextbet = basebet 
+bethigh = true 
+wagers  = 0
+cprofit = 0
+recov   = 0
+function dobet()
+    cprofit = cprofit + currentprofit
+    if cprofit > (basebet*2) then cprofit = 0 end
+    print("# cProfit \t[ "..string.format("%.8f", cprofit).." ] ")   
+    wagers = wagers + nextbet
+    if wagers > (basebet * 10000) then 
+        wagers = 0
+        resetseed() 
+        sleep(0.5)
+    end
+    if recov > 0 then        
+        --second condition
+        chance = 62
+        if win then
+            if (currentstreak == 2) then bethigh = !bethigh end
+            if (currentstreak == 3) then
+                nextbet = basebet
+            else
+                nextbet = previousbet * 1.75
+            end
+          if nextbet > basebet * 10 then nextbet = basebet / 100 end
+        else
+            if (currentstreak == -1) then
+                nextbet = basebet / 100
+             else
+                    nextbet = previousbet * 3
+            end
+        end        
+        if cprofit > basebet then 
+            recov = 0
+            cprofit = 0
+        end      
+    else
+        -- first condition
+        chance  = maxch
+        nextbet = basebet
+        if cprofit < -basebet then 
+            recov   = 1
+            chance  = 62
+            nextbet = basebet / 100
+        end             
+    
+    end
+end
