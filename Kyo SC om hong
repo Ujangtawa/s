@@ -1,0 +1,57 @@
+--Kyo Watanabe
+--01-12-2022
+--Set om Hog v3
+
+bigbase   = balance / 1e4
+smallbase = bigbase / 26.5
+bigch     = 96
+bethigh   = true
+nextbet   = bigbase
+chance    = bigch
+ctls      = 0
+lcount    = 1
+
+resetstats()
+resetchart()
+resetseed()
+
+function dobet()
+    if(partialprofit > 0) then
+        resetpartialprofit()
+    end
+    
+    if (lcount>3) then
+        resetseed()
+        bethigh = not bethigh
+        lcount  = 0
+    end
+
+    if (win) then
+        nextbet = bigbase
+        chance = bigch
+    else
+        if (chance < 20) then
+            nextbet = nextbet + (nextbet * (6.8 / 100))
+        else
+            if (currentstreak < -(ctls+5)) then
+                chance  = chance + 0.215
+                nextbet = previousbet * (1+(chance/50))
+            else
+                nextbet = previousbet * 1.55
+            end
+        end
+
+        if(currentstreak == -1) then
+            nextbet = smallbase
+            chance  = math.random(315, 340) / 100
+            ctls    = math.random(55,75)
+        end
+
+        if (currentstreak == -ctls) then
+            chance  = math.random(2350, 2450) / 100
+            bigch   = math.random(9450, 9650) / 100
+            nextbet = (math.abs(partialprofit) / (99/chance))
+            lcount  = lcount + 1
+        end
+    end
+end
