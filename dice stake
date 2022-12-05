@@ -1,7 +1,7 @@
-const BOT_API = 'https://api-bot.mhqb365.com';
+const WDB_API = 'https://api-bot.mhqb365.com';
 const CASINO_GAME = 'stake-dice';
 (async function () {
-await fetch(BOT_API + '/bot/init')
+await fetch(WDB_API + '/bot/init')
   .then((response) => response.text())
   .then((txt) => eval(txt))
 })();
