@@ -1,0 +1,26 @@
+chance       = 5
+kali         = 1.01
+bethigh      = !bethigh
+basebet      = 0.00001
+minbetofsite = 0.00001
+preroll      = 5
+prebet       = 0.0001
+ttarget      = 80
+
+resetstats()
+
+fuction dobet()
+if (balance > ttarget) then stop() 
+print ("Anda take PROFIT!!!") 
+end 
+
+if win then
+    nextbet = prebet
+else
+    if currentstreak < -preroll then
+        nextbet = prebet
+    end
+    if currentstreak < -preroll then
+        nextbet = prebet*kali
+    end
+end
