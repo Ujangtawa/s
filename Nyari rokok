@@ -1,0 +1,75 @@
+-------------------------
+--ESCEH SETENGAH MATENG--
+-------------------------
+divider = 100000 --(balance = 1/1000000 -- safe)
+chance  = math.random(65,80) 
+basebet = balance/divider 
+nextbet = 1e-8 
+nextbet = basebet 
+betlose = 0 
+metode  = 1 
+limit   = basebet * 100
+
+
+resetstats()
+function dobet() 
+    
+    if balance > 100 then stop() end
+    
+    chance  = math.random(65,80) 
+    betlose = betlose + currentprofit 
+    basebet = balance/divider 
+    bethigh = false
+    
+    if betlose > 0 then 
+        betlose = 0 
+        metode  = math.random(1,5) 
+        nextbet = basebet 
+    else 
+        if (metode == 1) then 
+            if math.random(10)==3 then  
+                nextbet = math.abs(betlose)/((99/chance)-1) 
+            end 
+            
+        elseif (metode==2) then 
+            if math.random(10)==3 then 
+                chance  = math.random(11,21)  
+                nextbet = math.abs(betlose)*0.5  
+                bethigh = true
+            end 
+            
+        elseif (metode==3) then 
+            if (currentstreak==1) then  
+                nextbet = math.abs(betlose) 
+            end 
+            
+        elseif (metode==4) then
+            if (currentstreak==-3) then
+               nextbet = previousbet * 3
+               chance = math.random(35,45)
+            end
+           
+        elseif (metode==5) then
+            if (currentstreak==3) then
+               nextbet = basebet
+               chance  = 80
+               bethigh = !bethigh
+            end
+        else 
+            nextbet = basebet 
+        end 
+        
+        if nextbet < basebet then nextbet = basebet end 
+    end   
+    
+    if (currentstreak==-5) then metode = 4 end 
+    if (currentstreak==5) then metode = 2 end
+    if (lastBet.roll < 5) then metode = 3 end    
+    if (lastBet.roll > 50) and (lastBet.roll < 80) then metode = 2 end
+    if nextbet > limit then
+       chance  = 13
+       nextbet = previousbet * 1.175
+       bethigh = true
+       resetseed()
+    end
+end
