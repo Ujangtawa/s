@@ -1,0 +1,55 @@
+--Kyo Watanabe  
+--02-12-2022  
+--Random Recov  
+  
+basebet  = balance / 5e3
+basech   = 77  
+ls       = 0  
+smchance = 1  
+minbet   = 0.000001  
+nextbet  = basebet  
+chance   = basech  
+  
+resetstats()  
+resetchart()  
+resetseed()  
+  
+function dobet()  
+    if (bets % 250 == 0) then  
+        resetseed()  
+        resetseed()  
+        resetseed()  
+    end  
+      
+    if (win) then  
+        if(partialprofit > 0) then  
+            nextbet  = basebet  
+            chance   = basech  
+            ls       = 0  
+            smchance = 1  
+            resetpartialprofit()  
+        else  
+            nextbet = (math.abs(partialprofit) * 0.75) + basebet  
+            chance  = math.random(90*100,94*100) / 100  
+            bethigh = not bethigh  
+        end  
+    else  
+        ls = ls + 1  
+          
+        if (ls == 5) then  
+            chance   = math.random(25*100, 45*100) / 100  
+            smchance = chance  
+            nextbet  = (math.abs(partialprofit)/10) / (99/chance)  
+        else  
+            if (smchance> 1) then  
+                chance = smchance  
+            end  
+            if (ls % 3 == 0) then  
+                chance   = chance + 0.05  
+                smchance = chance  
+            end  
+            nextbet = previousbet * (1 + (chance / 60))  
+        end  
+    end 
+   if nextbet < minbet then nextbet = minbet end 
+end
