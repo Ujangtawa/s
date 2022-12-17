@@ -1,0 +1,20 @@
+##  Copy the linux command from http://remotedesktop.google.com/headless  ##
+CRP1 = ''
+Pin = 123456 ## rdp pin
+Name = "RDP"    ## rdp name
+import os,subprocess
+username = "user" 
+password = "root"
+print("Creating User and Setting it up")
+os.system(f"useradd -m {username}")
+os.system(f"adduser {username} sudo")
+os.system(f"echo '{username}:{password}' | sudo chpasswd")
+os.system("sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd")
+print("User Created and Configured")
+CRP = CRP1.replace("$(hostname)",Name)
+
+os.system(f"adduser {username} chrome-remote-desktop")
+command = f"{CRP} --pin={Pin}"
+os.system(f"su - {username} -c '{command}'")
+os.system("service chrome-remote-desktop start")
+print("Finished Succesfully")
