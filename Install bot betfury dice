@@ -1,7 +1,7 @@
 const WDB_API = 'https://api-bot.mhqb365.com';
-const CASINO_GAME = 'betfury-limbo';
+const CASINO_GAME = 'betfury-dice';
 (async function () {
-await fetch(WDB_API + '/bot/init')
-  .then((response) => response.text())
-  .then((txt) => eval(txt))
+  await fetch(WDB_API + '/bot/init')
+    .then((response) => response.text())
+    .then((txt) => eval(txt))
 })();
