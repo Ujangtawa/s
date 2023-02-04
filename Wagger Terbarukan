@@ -1,0 +1,23 @@
+--resetall()
+targetProfit = 1000 -- ( amt )
+bethigh = false
+baseWager = 0.1
+baseRecov = 0.01
+chanceWager = {97,98}
+chanceRecov = 9.9
+Multiplier  = 12.5 -- ( % ) persentag
+base    = baseWager
+nextbet = base
+chance  = chanceWager[2]
+target  = balance+targetProfit
+function dobet()
+    if balance>target then stop()end
+    if win then
+        nextbet = baseWager
+        chance = math.random(chanceWager[1]*100,chanceWager[2]*100)/100
+    else
+        nextbet = nextbet+(nextbet*(Multiplier/100))
+        if (currentstreak==-1) then chance = chanceRecov end
+        if (currentstreak==-1) then nextbet=baseRecov end
+    end
+end
