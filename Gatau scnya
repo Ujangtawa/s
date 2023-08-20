@@ -1,4 +1,3 @@
-
 chance        = 50
 minchancewin  = 0.01 -- min chance on win
 maxchancewin  = 98 -- max chance on win
