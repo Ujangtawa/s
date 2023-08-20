@@ -1,0 +1,76 @@
+minbet = 1e-8
+basesunder = 7000000
+baseamount = balance / basesunder --(52e7/3^4) --(527e3*4)
+if(baseamount<minbet)then baseamount=minbet end
+basebet = baseamount
+first = baseamount
+second = baseamount
+third = first + second
+basemultiplier = 16
+currentmultiplier = 1.5
+lastmultiplier = 1.5
+currentbet = basebet
+lastamount = basebet
+nextbet = currentbet
+chance = math.floor(((99 / currentmultiplier) * 100) + 0.5) / 100
+loop,highs,lows,ath,worststreak,longestloop,largeloss,wager=0,0,0,0,0,0,0,0;betresult="";
+resetseed();resetstats();
+target = balance*2
+surge = balance;
+function dobet()
+  if balance>=target then stop() end;
+    if (win) then
+    if balance > surge then
+    surge = balance;
+    baseamount = balance / basesunder
+    end;
+        betresult = "[won]"
+        first = baseamount
+        second = baseamount
+        third = first + second
+        loop = 0
+        math.randomseed(os.time())
+        if (highs > (lows + lows * .16)) then
+            bethigh = true
+        elseif (lows > (highs + highs * .16)) then
+            bethigh = false
+        else
+            bethigh = math.floor(math.random(9999) % 2)
+        end
+    else
+        betresult = "[lost]"
+    end
+    if (currentstreak == 1) then
+        currentmultiplier = 1.5
+        currentbet = basebet
+    end
+    if (currentstreak == -1) then
+        currentmultiplier = 2
+        currentbet = (basebet * 2)
+    end
+    if (currentstreak < -1) then
+        currentmultiplier = lastmultiplier + 1
+        currentbet = lastamount
+    end
+    if (currentstreak == -2) then
+        lastmultiplier = 16.00
+    end
+    if (currentmultiplier == 26.00) then
+        currentmultiplier = basemultiplier + 1
+        first = second
+        second = currentbet
+        third = first + second
+        currentbet = third
+        loop = loop + 1
+    end
+    lastmultiplier = currentmultiplier
+    lastamount = currentbet
+    nextbet = currentbet
+    wager = wager + nextbet
+    chance = math.floor(((99 / currentmultiplier) * 100) + 0.5) / 100
+    if (lastBet.roll> 96.18) then highs = highs + 1 elseif (lastBet.roll < 3.81) then lows = lows + 1 end
+    if (loop > longestloop) then longestloop = loop end
+    if (profit > ath) then ath = profit end
+    if (largeloss < (ath - profit)) then largeloss = ath - profit end
+    if (currentstreak < worststreak) then worststreak = currentstreak end
+    end;
